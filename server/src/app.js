@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const bookingsController = require('./controllers/bookings');
+const routes = require('./controllers/routes');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
@@ -38,7 +38,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-app.use('/api', bookingsController);
+app.use('/api', routes);
 
 app.listen(port, function (err) {
     if (err) throw err;
