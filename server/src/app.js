@@ -2,8 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
+const path = require("path");
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
 //variables
 const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/BookingDB';
 const port = process.env.PORT || 8081;

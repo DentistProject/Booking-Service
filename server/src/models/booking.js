@@ -6,6 +6,7 @@ const bookingSchema = new Schema({
     dentistID: { type: Schema.Types.ObjectId, ref: 'Dentist' },
     dentistName: { type: String, required: true },
     patientName: { type: String, required: true },
+    status: { type: Boolean, required: true },
     date: {
         type: String,
         required: true,
