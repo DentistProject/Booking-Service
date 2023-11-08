@@ -5,6 +5,8 @@ const morgan = require('morgan')
 const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const bookingsController = require('./controllers/bookings');
+
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 //variables
@@ -25,6 +27,18 @@ app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
+// Error handler (i.e., when exception is thrown) must be registered last
+const env = app.get('env');
+// eslint-disable-next-line no-unused-vars
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.json({
+        message: err.message,
+        error: env === 'development' ? err : {}
+    });
+});
+
+app.use('/api', bookingsController);
 
 app.listen(port, function (err) {
     if (err) throw err;
