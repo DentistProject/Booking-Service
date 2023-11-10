@@ -6,6 +6,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const routes = require('./controllers/routes');
+const mqttHandler = require('./mqtt_handler');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
@@ -23,9 +24,12 @@ mongoose.connect(mongoURI).catch(function (err) {
 });
 
 const app = express()
+const mqttClient = new mqttHandler();
+mqttClient.connect();
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
+
 
 // Error handler (i.e., when exception is thrown) must be registered last
 const env = app.get('env');
@@ -39,6 +43,12 @@ app.use(function (err, req, res, next) {
 });
 
 app.use('/api', routes);
+// Routes
+//MQTT TEST
+app.post("/send-mqtt", function(req, res) {
+    mqttClient.sendMessage(req.body.message);
+    res.status(200).send("Message sent to mqtt");
+  });
 
 app.listen(port, function (err) {
     if (err) throw err;
