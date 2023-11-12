@@ -6,7 +6,6 @@ const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const routes = require('./controllers/routes');
-const mqttHandler = require('./mqtt_handler');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
@@ -24,8 +23,7 @@ mongoose.connect(mongoURI).catch(function (err) {
 });
 
 const app = express()
-const mqttClient = new mqttHandler();
-mqttClient.connect();
+const mqttClient = require('./mqtt');
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())

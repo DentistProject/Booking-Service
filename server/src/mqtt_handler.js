@@ -3,9 +3,9 @@ const mqtt = require('mqtt');
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = '';
-    this.username = ''; // mqtt credentials if these are needed to connect
-    this.password = '';
+    this.host = 'ssl:4752723418e248e49e77f44628c827b5.s2.eu.hivemq.cloud';
+    this.username = 'redyellowblue1'; // mqtt credentials if these are needed to connect
+    this.password = 'Masamune123';
   }
   
   connect() {
@@ -24,7 +24,7 @@ class MqttHandler {
     });
 
     // mqtt subscriptions
-    this.mqttClient.subscribe('mytopic', {qos: 0});
+    this.mqttClient.subscribe('#', {qos: 0});
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', function (topic, message) {
