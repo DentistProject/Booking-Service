@@ -3,9 +3,9 @@ const mqtt = require('mqtt');
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = 'ssl:4752723418e248e49e77f44628c827b5.s2.eu.hivemq.cloud';
-    this.username = 'redyellowblue1'; // mqtt credentials if these are needed to connect
-    this.password = 'Masamune123';
+    this.host = 'ssl://06c9231f22d4457abe0282a4302eda82.s2.eu.hivemq.cloud:8883';
+    this.username = 'toothcheck'; // mqtt credentials if these are needed to connect
+    this.password = '5vuiygrR6vygB!';
   }
   
   connect() {
