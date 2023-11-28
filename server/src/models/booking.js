@@ -5,8 +5,12 @@ const bookingSchema = new Schema({
     patientID: { type: Schema.Types.ObjectId, ref: 'Patient' },
     dentistID: { type: Schema.Types.ObjectId, ref: 'Dentist' },
     dentistName: { type: String, required: true },
-    patientName: { type: String, required: true },
-    status: { type: Boolean, required: true },
+    patientName: { type: String },
+    status: {
+        type: String,
+        required: true,
+        enum: ['AVAILABLE', 'CANCELED', 'BOOKED'],
+    },
     date: {
         type: String,
         required: true,
