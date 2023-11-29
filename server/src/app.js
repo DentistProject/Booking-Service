@@ -8,9 +8,9 @@ const mongoose = require("mongoose");
 const routes = require('./controllers/routes');
 
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, './.env') })
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
 //variables
-const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/BookingDB';
+const mongoURI = process.env.MONGODB_URI;
 const port = process.env.PORT || 8081;
 // Connect to MongoDB
 mongoose.connect(mongoURI).catch(function (err) {
