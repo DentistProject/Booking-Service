@@ -1,4 +1,3 @@
-const booking = require('../models/booking');
 const Booking = require('../models/booking');
 const mqttClient = require('../mqtt');
 const mongoose = require('mongoose');
