@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "a9b6be25-3e20-4540-bce2-f517abb523af",
+		"name": "Booking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30193742"
+	},
+	"item": [
+		{
+			"name": "Post Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Booking created\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    var data = pm.response.json();\r",
+							"    pm.expect(data.message).to.eql(\"Looking forward to the appointment\");\r",
+							"    pm.environment.set(\"bookingId1\", data._id)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patientID\": \"60d2f3f4c445efa4c4f149a7\",\r\n    \"dentistID\": \"60d2f3f4c445efa4c4f149a8\",\r\n    \"dentistName\": \"Dr. Smith\",\r\n    \"patientName\": \"John Doe\",\r\n    \"status\":\"AVAILABLE\",\r\n    \"date\": \"2022-12-31\",\r\n    \"time\": \"12:00\",\r\n    \"message\": \"Looking forward to the appointment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/bookings/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Booking 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Booking created\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    var data = pm.response.json();\r",
+							"    pm.expect(data.message).to.eql(\"Looking forward to a speedy appointment\");\r",
+							"    pm.environment.set(\"bookingId2\", data._id)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patientID\": \"70d2f3f4c445efa4c4f149a7\",\r\n    \"dentistID\": \"70d2f3f4c445efa4c4f149a8\",\r\n    \"dentistName\": \"Dr. Zeus\",\r\n    \"patientName\": \"Sonic Speed\",\r\n    \"status\": \"AVAILABLE\",\r\n    \"date\": \"2024-01-20\",\r\n    \"time\": \"15:00\",\r\n    \"message\": \"Looking forward to a speedy appointment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/bookings/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get boking by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response has correct status code\", () => {\r",
+							"    //assertion for correct status code\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"pm.test(\"Response has all properties\", () => {\r",
+							"    // Assertion for response properties\r",
+							"    pm.expect(responseJson._id).to.eql(pm.environment.get('bookingId1'));\r",
+							"    pm.expect(responseJson.patientID).to.eql('60d2f3f4c445efa4c4f149a7');\r",
+							"    pm.expect(responseJson.dentistID).to.eql('60d2f3f4c445efa4c4f149a8');\r",
+							"    pm.expect(responseJson.dentistName).to.eql('Dr. Smith');\r",
+							"    pm.expect(responseJson.patientName).to.eql('John Doe');\r",
+							"    pm.expect(responseJson.status).to.eql('AVAILABLE');\r",
+							"    pm.expect(responseJson.date).to.eql('2022-12-31');\r",
+							"    pm.expect(responseJson.time).to.eql('12:00');\r",
+							"    pm.expect(responseJson.message).to.eql('Looking forward to the appointment');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/bookings/{{bookingId1}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"{{bookingId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get bokings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has correct status code\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"First booking has correct properties\", function() {\r",
+							"    var bookings = pm.response.json();\r",
+							"    var firstBooking = bookings[0];\r",
+							"    \r",
+							"    pm.expect(firstBooking).to.have.property(\"patientID\").that.is.a(\"string\").and.equals(\"60d2f3f4c445efa4c4f149a7\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"dentistID\").that.is.a(\"string\").and.equals(\"60d2f3f4c445efa4c4f149a8\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"dentistName\").that.is.a(\"string\").and.equals(\"Dr. Smith\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"patientName\").that.is.a(\"string\").and.equals(\"John Doe\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"status\").that.is.a(\"string\").and.equals(\"AVAILABLE\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"date\").that.is.a(\"string\").and.equals(\"2022-12-31\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"time\").that.is.a(\"string\").and.equals(\"12:00\");\r",
+							"    pm.expect(firstBooking).to.have.property(\"message\").that.is.a(\"string\").and.equals(\"Looking forward to the appointment\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Second booking has correct properties\", function() {\r",
+							"    var bookings = pm.response.json();\r",
+							"    var secondBooking = bookings[1];\r",
+							"        pm.expect(secondBooking).to.have.property(\"patientID\").that.is.a(\"string\").and.equals(\"70d2f3f4c445efa4c4f149a7\");\r",
+							"    pm.expect(secondBooking).to.have.property(\"dentistID\").that.is.a(\"string\").and.equals(\"70d2f3f4c445efa4c4f149a8\");\r",
+							"        pm.expect(secondBooking).to.have.property(\"dentistName\").that.is.a(\"string\").and.equals(\"Dr. Zeus\");\r",
+							"    pm.expect(secondBooking).to.have.property(\"patientName\").that.is.a(\"string\").and.equals(\"Sonic Speed\");\r",
+							"    pm.expect(secondBooking).to.have.property(\"status\").that.is.a(\"string\").and.equals(\"AVAILABLE\");\r",
+							"        pm.expect(secondBooking).to.have.property(\"date\").that.is.a(\"string\").and.equals(\"2024-01-20\");\r",
+							"    pm.expect(secondBooking).to.have.property(\"time\").that.is.a(\"string\").and.equals(\"15:00\");\r",
+							"    pm.expect(secondBooking).to.have.property(\"message\").that.is.a(\"string\").and.equals(\"Looking forward to a speedy appointment\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/bookings/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Booking correct status code\", () => {\r",
+							"    //assert 201 code\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Booking correct message\"), () => {\r",
+							"    //Assert message\r",
+							"    pm.expect(responseJson.date).to.eql(requestJSON.message)\r",
+							"    pm.expect(responseJson.message).to.eql(requestJSON.message)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patientID\": \"60d2f3f4c445efa4c4f149a7\",\r\n    \"dentistID\": \"60d2f3f4c445efa4c4f149a8\",\r\n    \"dentistName\": \"Dr. Smith\",\r\n    \"patientName\": \"John Doe\",\r\n    \"status\": \"BOOKED\",\r\n    \"date\": \"2024-01-02\",\r\n    \"time\": \"12:00\",\r\n    \"message\": \"Looking forward to the updated appointment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/bookings/{{bookingId1}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"{{bookingId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 204\", function () {\r",
+							"  pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8081/api/v1/bookings/{{bookingId1}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"{{bookingId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check bookingID1 for delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response has correct status code\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8081/api/v1/bookings/{{bookingId1}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"{{bookingId1}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "variable_key",
+			"value": ""
+		}
+	]
+}
