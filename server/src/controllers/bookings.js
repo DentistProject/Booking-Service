@@ -120,5 +120,8 @@ module.exports = {
   getBooking,
   createBooking,
   updateBooking,
-  deleteBooking
+  deleteBooking,
+  getBookingsByDentist,
+  getBookingsByPatient,
+  getBookingsByDentistAvailable
 };
