@@ -22,6 +22,53 @@ const getBooking = async (req, res, next) => {
   }
 }
 
+const getBookingsByDentist = async (req, res, next) => {
+  const dentistID = req.params.id;
+  if (!dentistID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
+  try {
+    const bookings = await Booking.find({ dentistID });
+    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
+    mqttClient.sendMessage('bookingTopic', 'booking by dentist fetched');
+    res.json(bookings);
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getBookingsByDentistAvailable = async (req, res, next) => {
+  const dentistID = req.params.id;
+  if (!dentistID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
+  try {
+    const bookings = await Booking.find({ dentistID, status: 'AVAILABLE' });
+    if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
+    mqttClient.sendMessage('bookingTopic', 'booking by dentist fetched');
+    res.json(bookings);
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getBookingsByPatient = async (req, res, next) => {
+  const patientID = req.params.id;
+  if (!patientID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+  try {
+    const bookings = await Booking.find({patientID});
+    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
+    mqttClient.sendMessage('bookingTopic', 'booking by patient fetched');
+    res.json(bookings);
+  } catch (err) {
+    next(err);
+  }
+}
+
 const createBooking = async (req, res, next) => {
   const booking = new Booking(req.body);
 
