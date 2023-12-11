@@ -1,11 +1,17 @@
 const mqtt = require('mqtt');
+const dotenv = require("dotenv");
+const path = require("path");
+
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = process.env.MQTT_HOST ||'mqtt://broker.hivemq.com:1883';
+    this.host = process.env.MQTT_HOST;
     this.username = process.env.MQTT_USERNAME;
     this.password = process.env.MQTT_PASSWORD;
+    console.log(this.host);
   }
   
   connect() {
@@ -38,7 +44,7 @@ class MqttHandler {
 
   // Sends a mqtt message to topic: mytopic
   sendMessage(message) {
-    this.mqttClient.publish('mytopic', message);
+    this.mqttClient.publish('BookingLog', message);
   }
 }
 
