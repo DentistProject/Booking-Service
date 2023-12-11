@@ -29,7 +29,7 @@ const getBooking = async (req, res, next) => {
 
 const getBookingsByDentist = async (req, res, next) => {
   const dentistID = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(dentistID)) {
+  if (!dentistID){
     return res.status(400).json({ message: 'Invalid id' });
   }
 
@@ -45,7 +45,7 @@ const getBookingsByDentist = async (req, res, next) => {
 
 const getBookingsByDentistAvailable = async (req, res, next) => {
   const dentistID = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(dentistID)) {
+  if (!dentistID){
     return res.status(400).json({ message: 'Invalid id' });
   }
 
@@ -61,11 +61,11 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
 
 const getBookingsByPatient = async (req, res, next) => {
   const patientID = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(patientID)) {
+  if (!patientID){
     return res.status(400).json({ message: 'Invalid id' });
   }
   try {
-    const bookings = await Booking.find({ patientID});
+    const bookings = await Booking.find({patientID});
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
     mqttClient.sendMessage('bookingTopic', 'booking by patient fetched');
     res.json(bookings);
@@ -136,5 +136,5 @@ module.exports = {
   getBookingsByDentist,
   createBooking,
   updateBooking,
-  deleteBooking
+  deleteBooking,
 };
