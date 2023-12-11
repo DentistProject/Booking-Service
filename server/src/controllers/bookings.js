@@ -137,7 +137,4 @@ module.exports = {
   createBooking,
   updateBooking,
   deleteBooking,
-  getBookingsByDentist,
-  getBookingsByPatient,
-  getBookingsByDentistAvailable
 };
