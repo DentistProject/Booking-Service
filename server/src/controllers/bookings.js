@@ -1,5 +1,6 @@
 const Booking = require('../models/booking');
 const mqttClient = require('../mqtt');
+const mongoose = require('mongoose');
 
 const getBookings = async (req, res, next) => {
   try {
@@ -12,11 +13,62 @@ const getBookings = async (req, res, next) => {
 }
 
 const getBooking = async (req, res, next) => {
+  const bookingID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bookingID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
   try {
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) return res.status(404).send();
+    const booking = await Booking.findById(bookingID);
+    if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
     mqttClient.sendMessage('bookingTopic', 'booking fetched');
     res.json(booking);
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getBookingsByDentist = async (req, res, next) => {
+  const dentistID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(dentistID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
+  try {
+    const bookings = await Booking.find({ dentistID });
+    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
+    mqttClient.sendMessage('bookingTopic', 'booking by dentist fetched');
+    res.json(bookings);
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getBookingsByDentistAvailable = async (req, res, next) => {
+  const dentistID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(dentistID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
+  try {
+    const bookings = await Booking.find({ dentistID, status: 'AVAILABLE' });
+    if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
+    mqttClient.sendMessage('bookingTopic', 'booking by dentist fetched');
+    res.json(bookings);
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getBookingsByPatient = async (req, res, next) => {
+  const patientID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(patientID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+  try {
+    const bookings = await Booking.find({ patientID});
+    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
+    mqttClient.sendMessage('bookingTopic', 'booking by patient fetched');
+    res.json(bookings);
   } catch (err) {
     next(err);
   }
@@ -35,10 +87,14 @@ const createBooking = async (req, res, next) => {
 }
 
 const updateBooking = async (req, res, next) => {
+  const bookingID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bookingID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
   try {
-    const booking = await Booking.findById(req.params.id);
+    const booking = await Booking.findById(bookingID);
 
-    if (!booking) return res.status(404).send();
+    if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
 
     booking.patientID = req.body.patientID || booking.patientID;
     booking.dentistID = req.body.dentistID || booking.dentistID;
@@ -58,9 +114,13 @@ const updateBooking = async (req, res, next) => {
 }
 
 const deleteBooking = async (req, res, next) => {
+  const bookingID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bookingID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
   try {
-    const booking = await Booking.findByIdAndDelete(req.params.id);
-    if (!booking) return res.status(404).send();
+    const booking = await Booking.findByIdAndDelete(bookingID);
+    if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
     mqttClient.sendMessage('bookingTopic', 'booking deleted');
     res.status(204).send();
   } catch (err) {
@@ -71,6 +131,9 @@ const deleteBooking = async (req, res, next) => {
 module.exports = {
   getBookings,
   getBooking,
+  getBookingsByDentistAvailable,
+  getBookingsByPatient,
+  getBookingsByDentist,
   createBooking,
   updateBooking,
   deleteBooking
