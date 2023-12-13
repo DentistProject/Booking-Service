@@ -1,6 +1,6 @@
 const mqtt = require('mqtt');
-const dotenv = require("dotenv");
 const path = require("path");
+const dotenv = require("dotenv");
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
@@ -43,8 +43,8 @@ class MqttHandler {
   }
 
   // Sends a mqtt message to topic: mytopic
-  sendMessage(message) {
-    this.mqttClient.publish('BookingLog', message);
+  sendMessage(topic, message) {
+    this.mqttClient.publish(topic, message);
   }
 }
 
