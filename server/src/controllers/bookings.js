@@ -27,6 +27,11 @@ const getBooking = async (req, res, next) => {
 
 const getBookingsByDentist = async (req, res, next) => {
   const dentistID = req.params.id;
+  
+  if (!dentistID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
   try {
     const bookings = await Booking.find({ dentistID });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
@@ -39,6 +44,10 @@ const getBookingsByDentist = async (req, res, next) => {
 const getBookingsByDentistAvailable = async (req, res, next) => {
   const dentistID = req.params.id;
 
+  if (!dentistID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
   try {
     const bookings = await Booking.find({ dentistID, status: 'AVAILABLE' });
     if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
@@ -50,6 +59,10 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
 
 const getBookingsByPatient = async (req, res, next) => {
   const patientID = req.params.id;
+  
+  if (!patientID){
+    return res.status(400).json({ message: 'Invalid id' });
+  }
   
   try {
     const bookings = await Booking.find({ patientID});
@@ -102,6 +115,11 @@ const updateBooking = async (req, res, next) => {
 }
 
 const deleteBooking = async (req, res, next) => {
+  const bookingID = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(bookingID)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
   try {
     const booking = await Booking.findByIdAndDelete(bookingID);
     if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
