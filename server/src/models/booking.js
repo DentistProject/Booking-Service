@@ -13,7 +13,7 @@ const bookingSchema = new Schema({
         enum: ['AVAILABLE', 'CANCELED', 'BOOKED'],
     },
     date: {
-        type: String,
+        type: Date,
         required: true,
         match: [/^\d{4}-\d{2}-\d{2}$/, 'is not a valid date format']
     },
