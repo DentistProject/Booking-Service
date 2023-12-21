@@ -27,8 +27,8 @@ const getBooking = async (req, res, next) => {
 
 const getBookingsByDentist = async (req, res, next) => {
   const dentistID = req.params.id;
-  
-  if (!dentistID){
+
+  if (!dentistID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
 
@@ -43,8 +43,10 @@ const getBookingsByDentist = async (req, res, next) => {
 
 const getBookingsByDentistAvailable = async (req, res, next) => {
   const dentistID = req.params.id;
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 5;
 
-  if (!dentistID){
+  if (!dentistID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
 
@@ -66,10 +68,15 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
       query.date = { $lte: threeMonthsFromNow };
     }
 
+    const totalBookings = await Booking.countDocuments(query);
+    const totalPages = Math.ceil(totalBookings / limit);
 
-    const bookings = await Booking.find(query);
+    const bookings = await Booking.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
     if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
-    res.json(bookings);
+    res.json({ totalPages, bookings });
   } catch (err) {
     next(err);
   }
@@ -77,13 +84,13 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
 
 const getBookingsByPatient = async (req, res, next) => {
   const patientID = req.params.id;
-  
-  if (!patientID){
+
+  if (!patientID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
-  
+
   try {
-    const bookings = await Booking.find({ patientID});
+    const bookings = await Booking.find({ patientID });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
     res.json(bookings);
   } catch (err) {
