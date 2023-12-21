@@ -49,7 +49,25 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
   }
 
   try {
-    const bookings = await Booking.find({ dentistID, status: 'AVAILABLE' });
+    const query = { dentistID, status: 'AVAILABLE' };
+    const dateFilter = req.query.dateFilter;
+
+    if (dateFilter === '2weeks') {
+      const twoWeeksFromNow = new Date();
+      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+      query.date = { $lte: twoWeeksFromNow };
+    } else if (dateFilter === '1month') {
+      const oneMonthFromNow = new Date();
+      oneMonthFromNow.setDate(oneMonthFromNow.getDate() + 30);
+      query.date = { $lte: oneMonthFromNow };
+    } else if (dateFilter === '3months') {
+      const threeMonthsFromNow = new Date();
+      threeMonthsFromNow.setDate(threeMonthsFromNow.getDate() + 90);
+      query.date = { $lte: threeMonthsFromNow };
+    }
+
+
+    const bookings = await Booking.find(query);
     if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
     res.json(bookings);
   } catch (err) {
