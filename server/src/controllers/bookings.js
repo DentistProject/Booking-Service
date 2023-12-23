@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const getBookings = async (req, res, next) => {
   try {
-    const bookings = await Booking.find();
+    const bookings = await Booking.find({})
+      .sort({ date: 1 });
     res.json(bookings);
   } catch (err) {
     next(err);
@@ -17,7 +18,8 @@ const getBooking = async (req, res, next) => {
     return res.status(400).json({ message: 'Invalid id' });
   }
   try {
-    const booking = await Booking.findById(bookingID);
+    const booking = await Booking.findById(bookingID)
+    .sort({ date: 1 });
     if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
     res.json(booking);
   } catch (err) {
@@ -33,7 +35,8 @@ const getBookingsByDentist = async (req, res, next) => {
   }
 
   try {
-    const bookings = await Booking.find({ dentistID });
+    const bookings = await Booking.find({ dentistID })
+      .sort({ date: 1 });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
     res.json(bookings);
   } catch (err) {
@@ -72,6 +75,7 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
     const totalPages = Math.ceil(totalBookings / limit);
 
     const bookings = await Booking.find(query)
+      .sort({ date: 1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -90,7 +94,8 @@ const getBookingsByPatient = async (req, res, next) => {
   }
 
   try {
-    const bookings = await Booking.find({ patientID });
+    const bookings = await Booking.find({ patientID })
+      .sort({ date: 1 });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
     res.json(bookings);
   } catch (err) {
