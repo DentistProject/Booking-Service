@@ -26,11 +26,10 @@ const getBooking = async (req, res, next) => {
     return res.status(400).json({ message: 'Invalid id' });
   }
   try {
-    const unformatedBooking = await Booking.findById(bookingID)
-      .sort({ date: 1 });
-    if (!unformatedBooking) return res.status(404).json({ 'message': 'Booking not found' });
-    const booking = formatDatesInBookings(unformatedBooking);
-    res.json(booking);
+    const unformattedBooking = await Booking.findById(bookingID);
+    if (!unformattedBooking) return res.status(404).json({ 'message': 'Booking not found' });
+    const booking = formatDatesInBookings([unformattedBooking]);
+    res.json(booking[0]);
   } catch (err) {
     next(err);
   }
