@@ -2,11 +2,19 @@ const Booking = require('../models/booking');
 const mqttClient = require('../mqtt');
 const mongoose = require('mongoose');
 
+const formatDatesInBookings = (bookings) => {
+  return bookings.map(booking => ({
+    ...booking._doc,
+    date: booking.date.toISOString().split('T')[0]
+  }));
+}
+
 const getBookings = async (req, res, next) => {
   try {
     const bookings = await Booking.find({})
       .sort({ date: 1 });
-    res.json(bookings);
+    const formattedBookings = formatDatesInBookings(bookings);
+    res.json(formattedBookings);
   } catch (err) {
     next(err);
   }
@@ -19,9 +27,10 @@ const getBooking = async (req, res, next) => {
   }
   try {
     const booking = await Booking.findById(bookingID)
-    .sort({ date: 1 });
+      .sort({ date: 1 });
     if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
-    res.json(booking);
+    const formattedBooking = formatDatesInBookings(booking);
+    res.json(formattedBooking);
   } catch (err) {
     next(err);
   }
@@ -38,7 +47,8 @@ const getBookingsByDentist = async (req, res, next) => {
     const bookings = await Booking.find({ dentistID })
       .sort({ date: 1 });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
-    res.json(bookings);
+    const formattedBookings = formatDatesInBookings(bookings);
+    res.json(formattedBookings);
   } catch (err) {
     next(err);
   }
@@ -80,7 +90,8 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
       .limit(limit);
 
     if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
-    res.json({ totalPages, bookings });
+    const formattedBookings = formatDatesInBookings(bookings);
+    res.json({ totalPages, formattedBookings });
   } catch (err) {
     next(err);
   }
@@ -97,7 +108,8 @@ const getBookingsByPatient = async (req, res, next) => {
     const bookings = await Booking.find({ patientID })
       .sort({ date: 1 });
     if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
-    res.json(bookings);
+    const formattedBookings = formatDatesInBookings(bookings);
+    res.json(formattedBookings);
   } catch (err) {
     next(err);
   }
