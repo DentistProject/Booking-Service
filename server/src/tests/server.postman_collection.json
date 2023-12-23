@@ -3,7 +3,8 @@
 		"_postman_id": "a9b6be25-3e20-4540-bce2-f517abb523af",
 		"name": "Booking",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30193742"
+		"_exporter_id": "30193742",
+		"_collection_link": "https://group17dit342.postman.co/workspace/My-Workspace~6c3183a6-6e15-41f6-8e82-66b9bfd0c711/collection/30193742-a9b6be25-3e20-4540-bce2-f517abb523af?action=share&source=collection_link&creator=30193742"
 	},
 	"item": [
 		{
@@ -353,6 +354,207 @@
 						"v1",
 						"bookings",
 						"{{bookingId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBookingAvailable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check for totalpages\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object').that.has.property('totalPages');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check booking properties\", function () {\r",
+							"    pm.response.json().bookings.forEach(function(booking) {\r",
+							"        pm.expect(booking).to.have.property('_id');\r",
+							"        pm.expect(booking).to.have.property('patientID');\r",
+							"        pm.expect(booking).to.have.property('dentistID');\r",
+							"        pm.expect(booking).to.have.property('dentistName');\r",
+							"        pm.expect(booking).to.have.property('patientName');\r",
+							"        pm.expect(booking).to.have.property('status');\r",
+							"        pm.expect(booking).to.have.property('date');\r",
+							"        pm.expect(booking).to.have.property('time');\r",
+							"        pm.expect(booking).to.have.property('message');\r",
+							"        pm.expect(booking).to.have.property('__v');\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8081/api/v1/bookings/dentist/available/{{dentistID}}?dateFilter=all&page=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"dentist",
+						"available",
+						"{{dentistID}}"
+					],
+					"query": [
+						{
+							"key": "dateFilter",
+							"value": "all"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBookingByDentist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('check status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"check booking properties\", function () {\r",
+							"    pm.response.json().forEach(function(booking) {\r",
+							"        pm.expect(booking).to.have.property('_id');\r",
+							"        pm.expect(booking).to.have.property('patientID');\r",
+							"        pm.expect(booking).to.have.property('dentistID');\r",
+							"        pm.expect(booking).to.have.property('dentistName');\r",
+							"        pm.expect(booking).to.have.property('patientName');\r",
+							"        pm.expect(booking).to.have.property('status');\r",
+							"        pm.expect(booking).to.have.property('date');\r",
+							"        pm.expect(booking).to.have.property('time');\r",
+							"        pm.expect(booking).to.have.property('message');\r",
+							"        pm.expect(booking).to.have.property('__v');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8081/api/v1/bookings/dentist/{{dentistID}}?dateFilter=all&page=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"dentist",
+						"{{dentistID}}"
+					],
+					"query": [
+						{
+							"key": "dateFilter",
+							"value": "all"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBookingByDentist Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('check status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"check booking properties\", function () {\r",
+							"    pm.response.json().forEach(function(booking) {\r",
+							"        pm.expect(booking).to.have.property('_id');\r",
+							"        pm.expect(booking).to.have.property('patientID');\r",
+							"        pm.expect(booking).to.have.property('dentistID');\r",
+							"        pm.expect(booking).to.have.property('dentistName');\r",
+							"        pm.expect(booking).to.have.property('patientName');\r",
+							"        pm.expect(booking).to.have.property('status');\r",
+							"        pm.expect(booking).to.have.property('date');\r",
+							"        pm.expect(booking).to.have.property('time');\r",
+							"        pm.expect(booking).to.have.property('message');\r",
+							"        pm.expect(booking).to.have.property('__v');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8081/api/v1/bookings/patient/{{patientID}}?dateFilter=all&page=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"bookings",
+						"patient",
+						"{{patientID}}"
+					],
+					"query": [
+						{
+							"key": "dateFilter",
+							"value": "all"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
 					]
 				}
 			},
