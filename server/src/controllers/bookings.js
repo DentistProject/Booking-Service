@@ -2,9 +2,18 @@ const Booking = require('../models/booking');
 const mqttClient = require('../mqtt');
 const mongoose = require('mongoose');
 
+const formatDatesInBookings = (unformatedBookings) => {
+  return unformatedBookings.map(booking => ({
+    ...booking._doc,
+    date: booking.date.toISOString().split('T')[0]
+  }));
+}
+
 const getBookings = async (req, res, next) => {
   try {
-    const bookings = await Booking.find();
+    const unformatedBookings = await Booking.find({})
+      .sort({ date: 1 });
+    const bookings = formatDatesInBookings(unformatedBookings);
     res.json(bookings);
   } catch (err) {
     next(err);
@@ -17,9 +26,10 @@ const getBooking = async (req, res, next) => {
     return res.status(400).json({ message: 'Invalid id' });
   }
   try {
-    const booking = await Booking.findById(bookingID);
-    if (!booking) return res.status(404).json({ 'message': 'Booking not found' });
-    res.json(booking);
+    const unformattedBooking = await Booking.findById(bookingID);
+    if (!unformattedBooking) return res.status(404).json({ 'message': 'Booking not found' });
+    const booking = formatDatesInBookings([unformattedBooking]);
+    res.json(booking[0]);
   } catch (err) {
     next(err);
   }
@@ -27,14 +37,16 @@ const getBooking = async (req, res, next) => {
 
 const getBookingsByDentist = async (req, res, next) => {
   const dentistID = req.params.id;
-  
-  if (!dentistID){
+
+  if (!dentistID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
 
   try {
-    const bookings = await Booking.find({ dentistID });
-    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
+    const unformatedBookings = await Booking.find({ dentistID })
+      .sort({ date: 1 });
+    if (!unformatedBookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
+    const bookings = formatDatesInBookings(unformatedBookings);
     res.json(bookings);
   } catch (err) {
     next(err);
@@ -43,15 +55,42 @@ const getBookingsByDentist = async (req, res, next) => {
 
 const getBookingsByDentistAvailable = async (req, res, next) => {
   const dentistID = req.params.id;
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 5;
 
-  if (!dentistID){
+  if (!dentistID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
 
   try {
-    const bookings = await Booking.find({ dentistID, status: 'AVAILABLE' });
-    if (!bookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
-    res.json(bookings);
+    const query = { dentistID, status: 'AVAILABLE' };
+    const dateFilter = req.query.dateFilter;
+
+    if (dateFilter === '2weeks') {
+      const twoWeeksFromNow = new Date();
+      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+      query.date = { $lte: twoWeeksFromNow };
+    } else if (dateFilter === '1month') {
+      const oneMonthFromNow = new Date();
+      oneMonthFromNow.setDate(oneMonthFromNow.getDate() + 30);
+      query.date = { $lte: oneMonthFromNow };
+    } else if (dateFilter === '3months') {
+      const threeMonthsFromNow = new Date();
+      threeMonthsFromNow.setDate(threeMonthsFromNow.getDate() + 90);
+      query.date = { $lte: threeMonthsFromNow };
+    }
+
+    const totalBookings = await Booking.countDocuments(query);
+    const totalPages = Math.ceil(totalBookings / limit);
+
+    const unformatedBookings = await Booking.find(query)
+      .sort({ date: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    if (!unformatedBookings) return res.status(404).json({ 'message': 'No available booking found for this dentist' });
+    const bookings = formatDatesInBookings(unformatedBookings);
+    res.json({ totalPages, bookings });
   } catch (err) {
     next(err);
   }
@@ -59,14 +98,16 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
 
 const getBookingsByPatient = async (req, res, next) => {
   const patientID = req.params.id;
-  
-  if (!patientID){
+
+  if (!patientID) {
     return res.status(400).json({ message: 'Invalid id' });
   }
-  
+
   try {
-    const bookings = await Booking.find({ patientID});
-    if (!bookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
+    const unformatedBookingsbookings = await Booking.find({ patientID })
+      .sort({ date: 1 });
+    if (!unformatedBookingsbookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
+    const bookings = formatDatesInBookings(unformatedBookingsbookings);
     res.json(bookings);
   } catch (err) {
     next(err);
