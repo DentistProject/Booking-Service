@@ -12,7 +12,7 @@ const formatDatesInBookings = (unformatedBookings) => {
 const getBookings = async (req, res, next) => {
   try {
     const unformatedBookings = await Booking.find({})
-      .sort({ date: 1 });
+      .sort({ date: 1, time: 1 });
     const bookings = formatDatesInBookings(unformatedBookings);
     res.json(bookings);
   } catch (err) {
@@ -44,7 +44,7 @@ const getBookingsByDentist = async (req, res, next) => {
 
   try {
     const unformatedBookings = await Booking.find({ dentistID })
-      .sort({ date: 1 });
+      .sort({ date: 1, time: 1 });
     if (!unformatedBookings) return res.status(404).json({ 'message': 'Booking not found for this dentist' });
     const bookings = formatDatesInBookings(unformatedBookings);
     res.json(bookings);
@@ -84,7 +84,7 @@ const getBookingsByDentistAvailable = async (req, res, next) => {
     const totalPages = Math.ceil(totalBookings / limit);
 
     const unformatedBookings = await Booking.find(query)
-      .sort({ date: 1 })
+      .sort({ date: 1, time: 1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -105,7 +105,7 @@ const getBookingsByPatient = async (req, res, next) => {
 
   try {
     const unformatedBookingsbookings = await Booking.find({ patientID })
-      .sort({ date: 1 });
+      .sort({ date: 1, time: 1 });
     if (!unformatedBookingsbookings) return res.status(404).json({ 'message': 'Booking not found for this patient' });
     const bookings = formatDatesInBookings(unformatedBookingsbookings);
     res.json(bookings);
