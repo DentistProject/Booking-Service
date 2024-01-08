@@ -9,11 +9,13 @@ const  {
     updateBooking,
     deleteBooking,
     getBookingsByDentistAvailable,
-    getBookingsByPatient
+    getBookingsByPatient,
+    getCountAvailableBookings
 
 } = require('../controllers/bookings.js')
 
 router.get('/v1/bookings', getBookings)
+router.get('/v1/bookings/countAvailableBookings', getCountAvailableBookings)
 router.get('/v1/bookings/:id', getBooking)
 router.get('/v1/bookings/dentist/:id', getBookingsByDentist)
 router.get('/v1/bookings/dentist/available/:id', getBookingsByDentistAvailable)

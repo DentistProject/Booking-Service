@@ -20,6 +20,15 @@ const getBookings = async (req, res, next) => {
   }
 }
 
+const getCountAvailableBookings = async (req, res, next) => {
+  try {
+    const count = await Booking.countDocuments({  status: 'AVAILABLE' });
+    res.json({ count });
+  } catch (err) {
+    next(err);
+  }
+}
+
 const getBooking = async (req, res, next) => {
   const bookingID = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(bookingID)) {
@@ -180,4 +189,5 @@ module.exports = {
   createBooking,
   updateBooking,
   deleteBooking,
+  getCountAvailableBookings
 };
